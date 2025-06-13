@@ -10,8 +10,6 @@ import (
 	
 )
 
-
-
 func SearchTrack(c *fiber.Ctx) error {
 
 	name := c.Params("query")

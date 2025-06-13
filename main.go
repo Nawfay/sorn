@@ -27,5 +27,7 @@ func main() {
 	app.Get("/api/album/:album_id", handlers.GetAlbum)
 	app.Get("/api/artist/:artist_id", handlers.GetArtist)
 
+	app.Post("/api/download", handlers.AddTrackToDownload)
+
     app.Listen(":8080")
 }
