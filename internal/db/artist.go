@@ -6,20 +6,19 @@ import (
 	"gorm.io/gorm"
 )
 
-
-
 // GetOrCreateArtist tries to find an artist by name.
 // If it doesn’t exist, it creates a new artist with the given data.
-func GetOrCreateArtist(db *gorm.DB, name string, tracked bool, youtube bool) (*Artist, error) {
+func GetOrCreateArtist(db *gorm.DB, name string, id int, tracked bool, youtube bool) (*Artist, error) {
 	var artist Artist
 
 	err := db.Where("name = ?", name).First(&artist).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		// Artist not found, create a new one
 		artist = Artist{
-			Name:    name,
-			Tracked: tracked,
-			Youtube: youtube,
+			Name:     name,
+			DeezerID: id,
+			Tracked:  tracked,
+			Youtube:  youtube,
 		}
 		if err := db.Create(&artist).Error; err != nil {
 			return nil, err
@@ -36,7 +35,7 @@ func GetOrCreateArtist(db *gorm.DB, name string, tracked bool, youtube bool) (*A
 func GetArtistByID(db *gorm.DB, id uint) (*Artist, error) {
 	var artist Artist
 
-	err := db.First(&artist, id).Error
+	err := db.Preload("Albums").Preload("Albums.Songs").First(&artist, id).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil // no artist found with that ID
 	} else if err != nil {

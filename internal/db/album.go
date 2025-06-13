@@ -3,12 +3,13 @@ package db
 import (
 	"errors"
 	"fmt"
-	"sorn/internal/utils"
 	"sorn/internal/config"
+	"sorn/internal/utils"
+
 	"gorm.io/gorm"
 )
 
-func GetOrCreateAlbum(db *gorm.DB, title string, artistID uint) (*Album, error) {
+func GetOrCreateAlbum(db *gorm.DB, title string, id int, artistID uint) (*Album, error) {
 	var album Album
 
 	// Check if album exists (by title and artistID)
@@ -28,6 +29,7 @@ func GetOrCreateAlbum(db *gorm.DB, title string, artistID uint) (*Album, error) 
 
 		album = Album{
 			Title:    title,
+			DeezerID: id,
 			ArtistID: artistID,
 			Path:     path,
 			Youtube:  false, // default value
@@ -47,7 +49,7 @@ func GetOrCreateAlbum(db *gorm.DB, title string, artistID uint) (*Album, error) 
 func GetAlbumByID(db *gorm.DB, id uint) (*Album, error) {
 	var album Album
 
-	err := db.First(&album, id).Error
+	err := db.Preload("Artist").Preload("Songs").First(&album, id).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil // no album found with that ID
 	} else if err != nil {
