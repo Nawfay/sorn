@@ -4,6 +4,7 @@ import (
     "regexp"
     "strings"
 	"path/filepath"
+
 )
 
 // NormalizeName keeps spaces but removes unsafe characters and lowercases the string
@@ -31,12 +32,15 @@ func NormalizeFilename(name string) string {
     return normalized
 }
 
-
-
-
 func BuildAlbumPath(baseDir, artistName, albumName string) string {
     artistFolder := NormalizeName(artistName)
     albumFolder := NormalizeName(albumName)
 
     return filepath.Join(baseDir, artistFolder, albumFolder)
+}
+
+
+func BuildArtistPath(baseDir, artistName string) string {
+    artistFolder := NormalizeName(artistName)
+    return filepath.Join(baseDir, artistFolder)
 }

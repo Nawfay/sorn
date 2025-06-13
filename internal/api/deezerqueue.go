@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"sorn/internal/db"
 	"sorn/internal/utils"
+	"sorn/internal/config"
 )
+
+
 
 func QueueAlbum(id string) error {
 
@@ -14,10 +17,31 @@ func QueueAlbum(id string) error {
 		return fmt.Errorf("failed to get album from Deezer: %w", err)
 	}
 
+	artistIdStr := fmt.Sprint(albumData.ArtistID)
+
+	artistData, err := FetchArtist(artistIdStr)
+	if err != nil {
+		return fmt.Errorf("failed to get artist from Deezer: %w", err)
+	}
+
 	// get or create artist
 	artist, err := db.GetOrCreateArtist(db.DB, albumData.Artist, albumData.ArtistID, false, false)
 	if err != nil {
 		return fmt.Errorf("failed to get/create artist: %w", err)
+	}
+	
+	// create artist path
+	path := utils.BuildArtistPath(config.Cfg.DownloadPath, artist.Name)
+	err = utils.GeneratePath(path)
+	if err != nil {
+		return fmt.Errorf("failed to create artist path: %w", err)
+	}
+
+	// generare artist photo
+	photoPath := fmt.Sprintf("%s/%s.jpg", path, utils.NormalizeFilename(artist.Name))
+	err = utils.DownloadImage(artistData.PictureMedium, photoPath)
+	if err != nil {
+		return fmt.Errorf("failed to download artist photo: %w", err)
 	}
 
 	// get or create album
@@ -25,6 +49,14 @@ func QueueAlbum(id string) error {
 	if err != nil {
 		return fmt.Errorf("failed to get/create album: %w", err)
 	}
+
+	// create album path
+	path = utils.BuildAlbumPath(config.Cfg.DownloadPath, artist.Name, album.Title)
+	err = utils.GeneratePath(path)
+	if err != nil {
+		return fmt.Errorf("failed to create album path: %w", err)
+	}
+
 
 	// Build track paths and enqueue tracks
 	for _, t := range albumData.Tracks {
