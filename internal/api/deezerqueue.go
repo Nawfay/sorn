@@ -63,7 +63,7 @@ func QueueAlbum(id string) error {
 		trackPath := fmt.Sprintf("%s/%s.mp3", album.Path, utils.NormalizeFilename(t.Title))
 
 		item := &db.QueueItem{
-			DeezerID: t.ID,
+			DeezerID: fmt.Sprint(t.ID),
 			Title:    t.Title,
 			Artist:   artist.Name,
 			Album:    album.Title,

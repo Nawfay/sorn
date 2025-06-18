@@ -16,7 +16,7 @@ type QueueItem struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 
-	DeezerID int `gorm:"uniqueIndex"` // Unique to avoid duplicates
+	DeezerID string `gorm:"uniqueIndex"` // Unique to avoid duplicates
 	Title    string
 	Artist   string
 	Album    string
@@ -49,11 +49,12 @@ type Album struct {
 type Song struct {
 	gorm.Model
 	Title    string
-	DeezerID int `gorm:"uniqueIndex"` // unique song ID from Deezer
+	DeezerID string `gorm:"uniqueIndex"` // unique song ID from Deezer
 	Duration uint
 	AlbumID  uint
 	Album    Album `gorm:"foreignKey:AlbumID"`
 	FilePath string
+	Youtube  bool
 }
 
 func Connect() {
