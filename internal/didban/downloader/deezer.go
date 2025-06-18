@@ -81,7 +81,7 @@ func SetARLCookie(arl string) error {
 
 // DownloadTrack retrieves and decrypts a full Deezer track (FLAC/320/128).
 // trackID is the Deezer track ID; outputPath is the destination file.
-func DownloadTrackDeezer(track *models.DidbanTrack, tmpPath string, trackPath string) (bool, error) {
+func downloadTrackDeezer(track *models.DidbanTrack, tmpPath string, trackPath string) (bool, error) {
 
 
 	// 1) fetch encrypted source URLs

@@ -6,9 +6,7 @@ import (
 	"time"
 
 	"sorn/internal/db"
-
-	"github.com/nawfay/didban/didban"
-	"github.com/nawfay/didban/didban/models"
+	"sorn/internal/didban/downloader"
 )
 
 
@@ -32,15 +30,8 @@ func StartWorker() {
 			fmt.Printf("Downloading: %s by %s\n", item.Title, item.Artist)
 
 			db.DB.Model(&item).Update("status", "downloading")
-			err := didban.DownloadTracks(models.QueueItem{
-				DeezerID: item.DeezerID,
-				Title:    item.Title,
-				Artist:   item.Artist,
-				Album:    item.Album,
-				URL:      item.URL,
-				Path:     item.Path,
-				Youtube:  item.Youtube,
-			})
+			err := downloader.DownloadTracks(item)
+			
 			if err != nil {
 				log.Printf("Failed to download: %v", err)
 				db.DB.Model(&item).Update("status", "failed")
