@@ -17,6 +17,7 @@ func AddTrackToDownload(c *fiber.Ctx) error {
 
 	err := api.QueueAlbum(id)
 	if err != nil {
+		fmt.Println(err)
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 

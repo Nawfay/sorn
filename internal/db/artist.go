@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -21,10 +22,12 @@ func GetOrCreateArtist(db *gorm.DB, name string, id int, tracked bool, youtube b
 			Youtube:  youtube,
 		}
 		if err := db.Create(&artist).Error; err != nil {
+			fmt.Println("something wrong here1")
 			return nil, err
 		}
 		return &artist, nil
 	} else if err != nil {
+		fmt.Println("something wrong here2")
 		// Some other DB error
 		return nil, err
 	}

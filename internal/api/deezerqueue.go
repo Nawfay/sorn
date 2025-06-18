@@ -39,7 +39,7 @@ func QueueAlbum(id string) error {
 
 	// generare artist photo
 	photoPath := fmt.Sprintf("%s/%s.jpg", path, utils.NormalizeFilename(artist.Name))
-	err = utils.DownloadImage(artistData.PictureMedium, photoPath)
+	err = utils.FetchCover(artistData.PictureMedium, photoPath)
 	if err != nil {
 		return fmt.Errorf("failed to download artist photo: %w", err)
 	}
@@ -60,15 +60,15 @@ func QueueAlbum(id string) error {
 
 	// Build track paths and enqueue tracks
 	for _, t := range albumData.Tracks {
-		trackPath := fmt.Sprintf("%s/%s.mp3", album.Path, utils.NormalizeFilename(t.Title))
+		// trackPath := fmt.Sprintf("%s/%s.mp3", album.Path, utils.NormalizeFilename(t.Title))
 
 		item := &db.QueueItem{
-			DeezerID: t.ID,
+			DeezerID: fmt.Sprint(t.ID),
 			Title:    t.Title,
 			Artist:   artist.Name,
 			Album:    album.Title,
 			URL:      "nil",
-			Path:     trackPath,
+			Path:     album.Path,
 			Youtube:  false,
 			Status:   "pending",
 		}

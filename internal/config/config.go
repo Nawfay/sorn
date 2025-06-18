@@ -11,6 +11,8 @@ var Cfg *Config
 
 type Config struct {
 	DownloadPath string
+	TmpPath	  string
+	ARL          string
 }
 
 func Load() {
@@ -22,9 +24,11 @@ func Load() {
 
 	Cfg = &Config{
 		DownloadPath: os.Getenv("DOWNLOAD_PATH"),
+		TmpPath:      os.Getenv("TMP_PATH"),
+		ARL:          os.Getenv("ARL"),
 	}
 
-	if Cfg.DownloadPath == "" {
+	if Cfg.DownloadPath == ""  {
 		log.Fatal("DOWNLOAD_PATH is not set")
 	}
 }
