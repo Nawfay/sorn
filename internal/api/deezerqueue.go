@@ -39,7 +39,7 @@ func QueueAlbum(id string) error {
 
 	// generare artist photo
 	photoPath := fmt.Sprintf("%s/%s.jpg", path, utils.NormalizeFilename(artist.Name))
-	err = utils.DownloadImage(artistData.PictureMedium, photoPath)
+	err = utils.FetchCover(artistData.PictureMedium, photoPath)
 	if err != nil {
 		return fmt.Errorf("failed to download artist photo: %w", err)
 	}
