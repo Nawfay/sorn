@@ -17,7 +17,7 @@ type Config struct {
 
 func Load() {
 	// Load variables from .env file
-	err := godotenv.Load("/home/nawaf/Documents/GitHub/sorn/.env")
+	err := godotenv.Load()
 	if err != nil {
 		log.Println(".env file not found or couldn't be loaded (that's okay in production)")
 	}

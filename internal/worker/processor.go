@@ -2,7 +2,7 @@ package queue
 
 import (
 	"fmt"
-	"log"
+	// "log"
 	"time"
 
 	"sorn/internal/db"
@@ -22,18 +22,18 @@ func StartWorker() {
 			if tx.Error != nil {
 				SetStatus("idle")
 				fmt.Println("Queue empty, sleeping...")
-				time.Sleep(5 * time.Minute) // Runs again in 5 minutes
+				time.Sleep(5* time.Second) // Runs again in 5 minutes
 				continue
 			}
 
 			SetStatus("working")
-			fmt.Printf("Downloading: %s by %s\n", item.Title, item.Artist)
+			fmt.Println("Downloading:", item.Title, "by", item.Artist)
 
 			db.DB.Model(&item).Update("status", "downloading")
 			err := downloader.DownloadTracks(item)
 			
 			if err != nil {
-				log.Printf("Failed to download: %v", err)
+				fmt.Println("Failed to download:", err)
 				db.DB.Model(&item).Update("status", "failed")
 				continue
 			}
@@ -43,7 +43,7 @@ func StartWorker() {
 				// "path":   item.Path, // optional: set final path
 			})
 
-			time.Sleep(2 * time.Second) // small delay before next
+			time.Sleep(2 * time.Minute) // small delay before next
 		}
 	}()
 }

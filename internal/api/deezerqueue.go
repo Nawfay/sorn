@@ -60,7 +60,7 @@ func QueueAlbum(id string) error {
 
 	// Build track paths and enqueue tracks
 	for _, t := range albumData.Tracks {
-		trackPath := fmt.Sprintf("%s/%s.mp3", album.Path, utils.NormalizeFilename(t.Title))
+		// trackPath := fmt.Sprintf("%s/%s.mp3", album.Path, utils.NormalizeFilename(t.Title))
 
 		item := &db.QueueItem{
 			DeezerID: fmt.Sprint(t.ID),
@@ -68,7 +68,7 @@ func QueueAlbum(id string) error {
 			Artist:   artist.Name,
 			Album:    album.Title,
 			URL:      "nil",
-			Path:     trackPath,
+			Path:     album.Path,
 			Youtube:  false,
 			Status:   "pending",
 		}

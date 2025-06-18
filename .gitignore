@@ -2,3 +2,4 @@ database.db
 /music
 /tmp
 .env
+.DS_Store
